@@ -1,6 +1,0 @@
-C:\work\XNA\Tutorial\Tutorial\Tutorial\bin\x86\Debug\Tutorial.exe
-C:\work\XNA\Tutorial\Tutorial\Tutorial\bin\x86\Debug\Tutorial.pdb
-C:\work\XNA\Tutorial\Tutorial\Tutorial\obj\x86\Debug\Tutorial.csprojResolveAssemblyReference.cache
-C:\work\XNA\Tutorial\Tutorial\Tutorial\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\work\XNA\Tutorial\Tutorial\Tutorial\obj\x86\Debug\Tutorial.exe
-C:\work\XNA\Tutorial\Tutorial\Tutorial\obj\x86\Debug\Tutorial.pdb

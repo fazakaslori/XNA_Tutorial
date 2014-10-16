@@ -1,0 +1,6 @@
+*.suo
+*.user
+*.cache
+Tutorial/Tutorial/TutorialContent/obj/
+Tutorial/Tutorial/Tutorial/bin/
+Tutorial/Tutorial/Tutorial/obj/
