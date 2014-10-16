@@ -19,6 +19,15 @@ namespace Tutorial
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D texture;
+        Texture2D textureTransparent;
+
+        Vector2 imagePos;
+        Vector2 imageTransPos;
+
+        float imageMoveSpeed = 2f;
+        float imageTransMoveSpeed = 3f;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -48,6 +57,11 @@ namespace Tutorial
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            texture = Content.Load<Texture2D>(@"Images/logo");
+            textureTransparent = Content.Load<Texture2D>(@"Images/logo_trans");
+
+            imagePos = Vector2.Zero;
+            imageTransPos = new Vector2(Window.ClientBounds.Width - texture.Width, Window.ClientBounds.Height - texture.Height);
         }
 
         /// <summary>
@@ -84,6 +98,12 @@ namespace Tutorial
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend); //makes use of Z layering
+
+            spriteBatch.Draw(texture, imagePos, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(textureTransparent, imageTransPos, null, Color.White, 0.0f, Vector2.Zero, 1, SpriteEffects.None, 1);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
