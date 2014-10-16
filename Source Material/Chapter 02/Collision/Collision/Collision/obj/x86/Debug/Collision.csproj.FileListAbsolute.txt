@@ -1,0 +1,6 @@
+C:\work\XNA\Source Material\Chapter 02\Collision\Collision\Collision\bin\x86\Debug\Content\Images\logo.xnb
+C:\work\XNA\Source Material\Chapter 02\Collision\Collision\Collision\bin\x86\Debug\Collision.exe
+C:\work\XNA\Source Material\Chapter 02\Collision\Collision\Collision\bin\x86\Debug\Collision.pdb
+C:\work\XNA\Source Material\Chapter 02\Collision\Collision\Collision\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\work\XNA\Source Material\Chapter 02\Collision\Collision\Collision\obj\x86\Debug\Collision.exe
+C:\work\XNA\Source Material\Chapter 02\Collision\Collision\Collision\obj\x86\Debug\Collision.pdb
