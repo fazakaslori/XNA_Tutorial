@@ -5,3 +5,7 @@ Tutorial/Tutorial/TutorialContent/obj/
 Tutorial/Tutorial/Tutorial/bin/
 Tutorial/Tutorial/Tutorial/obj/
 Tutorial/Tutorial/Tutorial/Tutorial.csproj.Debug.cachefile
+*.cachefile
+AssemblyInfo.cs
+**/bin/*
+**/obj/*
