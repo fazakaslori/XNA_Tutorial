@@ -19,14 +19,14 @@ namespace Tutorial
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D texture;
-        Texture2D textureTransparent;
+        Texture2D xnaImageTexture;
+        Texture2D xnaTransparentTxture;
 
-        Vector2 imagePos;
-        Vector2 imageTransPos;
+        Vector2 xnaImagePos;
+        Vector2 xnaTransparentImagePos;
 
-        float imageMoveSpeed = 2f;
-        float imageTransMoveSpeed = 3f;
+        float xnaImageMoveSpeed = 4f;
+        float xnaTransparentImageMoveSpeed = 3f;
 
         public Game1()
         {
@@ -57,13 +57,13 @@ namespace Tutorial
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            texture = Content.Load<Texture2D>(@"Images/logo");
-            textureTransparent = Content.Load<Texture2D>(@"Images/logo_trans");
+            xnaImageTexture = Content.Load<Texture2D>(@"Images/logo");
+            xnaTransparentTxture = Content.Load<Texture2D>(@"Images/logo_trans");
 
-            imagePos = Vector2.Zero;
-            imageTransPos = new Vector2(Window.ClientBounds.Width - texture.Width, Window.ClientBounds.Height - texture.Height);
+            xnaImagePos = Vector2.Zero;
+            xnaTransparentImagePos = new Vector2(Window.ClientBounds.Width - xnaImageTexture.Width, Window.ClientBounds.Height - xnaImageTexture.Height);
         }
-
+        
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -86,6 +86,21 @@ namespace Tutorial
 
             // TODO: Add your update logic here
 
+            //moving around
+            xnaImagePos.X += xnaImageMoveSpeed;
+            xnaTransparentImagePos.Y += xnaTransparentImageMoveSpeed;
+
+            //collision detection
+            if (xnaImagePos.X > Window.ClientBounds.Width - xnaImageTexture.Width || xnaImagePos.X < 0)
+            {
+                xnaImageMoveSpeed *= -1;
+            }
+
+            if (xnaTransparentImagePos.Y > Window.ClientBounds.Height - xnaTransparentTxture.Height || xnaTransparentImagePos.Y < 0)
+            {
+                xnaTransparentImageMoveSpeed *= -1;
+            }
+
             base.Update(gameTime);
         }
 
@@ -100,8 +115,8 @@ namespace Tutorial
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend); //makes use of Z layering
 
-            spriteBatch.Draw(texture, imagePos, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            spriteBatch.Draw(textureTransparent, imageTransPos, null, Color.White, 0.0f, Vector2.Zero, 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(xnaImageTexture, xnaImagePos, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(xnaTransparentTxture, xnaTransparentImagePos, null, Color.White, 0.0f, Vector2.Zero, 1, SpriteEffects.None, 1);
 
             spriteBatch.End();
 
