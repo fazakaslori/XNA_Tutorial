@@ -19,7 +19,9 @@ namespace AnimatedSprites
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        //Texxture variables
         Texture2D animatedRingTexture;
+        Texture2D animatedSkullTexture;
 
         //animation variables
         Point animatedRingFrameSize = new Point(75, 75);
@@ -27,8 +29,17 @@ namespace AnimatedSprites
         Point animatedRingSpriteSheetSize = new Point(6, 8);
         SpriteAinationTime ringAnimation;
 
+        Point animatedSkullFrameSize = new Point(75, 75);
+        Point currentSkullFrame = new Point(0, 0);
+        Point animatedSkullSpriteSheetSize = new Point(6, 8);
+        SpriteAinationTime skullAnimation;
+
+        //variables for movespeeds and positioning
         Vector2 ringMoveSpeed;
         Vector2 animatedRingPosition;
+
+        Vector2 skullMoveSpeed;
+        Vector2 animatedSkullPosition;
 
         struct SpriteAinationTime
         {
@@ -53,13 +64,19 @@ namespace AnimatedSprites
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             ringAnimation = new SpriteAinationTime();
             ringAnimation.FramesPerSecond = 60;
             ringAnimation.TimeSinceLastUpdate = 0;
 
             animatedRingPosition = Vector2.Zero;
             ringMoveSpeed = new Vector2(5, 3);
+
+            skullAnimation = new SpriteAinationTime();
+            skullAnimation.FramesPerSecond = 60;
+            skullAnimation.TimeSinceLastUpdate = 0;
+
+            animatedSkullPosition = Vector2.Zero;
+            skullMoveSpeed = new Vector2(2, 2);
 
             base.Initialize();
         }
@@ -73,8 +90,9 @@ namespace AnimatedSprites
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            //loading sprites
             animatedRingTexture = Content.Load<Texture2D>(@"images\threerings");
+            animatedSkullTexture = Content.Load<Texture2D>(@"images\skullball");
         }
 
         /// <summary>
@@ -113,6 +131,22 @@ namespace AnimatedSprites
                 }
             }
 
+            //animate the skull image - a.k.a increse the index of the image in the image matrix
+            skullAnimation.TimeSinceLastUpdate += gameTime.ElapsedGameTime.Milliseconds;
+            if (skullAnimation.TimeSinceLastUpdate > 1000 / skullAnimation.FramesPerSecond)
+            {
+                skullAnimation.TimeSinceLastUpdate -= 1000 / skullAnimation.FramesPerSecond;
+
+                ++currentSkullFrame.X;
+                if (currentSkullFrame.X >= animatedSkullSpriteSheetSize.X)
+                {
+                    currentSkullFrame.X = 0;
+                    ++currentSkullFrame.Y;
+                    if (currentSkullFrame.Y >= animatedSkullSpriteSheetSize.Y)
+                        currentSkullFrame.Y = 0;
+                }
+            }
+
             //move the ring along the X AXIS
             animatedRingPosition.X += ringMoveSpeed.X;
             if (animatedRingPosition.X > Window.ClientBounds.Width - animatedRingFrameSize.X || animatedRingPosition.X < 0)
@@ -125,6 +159,20 @@ namespace AnimatedSprites
             if (animatedRingPosition.Y >= Window.ClientBounds.Height - animatedRingFrameSize.Y || animatedRingPosition.Y < 0)
             {
                 ringMoveSpeed.Y *= -1;
+            }
+
+            //move the ring along the X AXIS
+            animatedSkullPosition.X += skullMoveSpeed.X;
+            if (animatedSkullPosition.X > Window.ClientBounds.Width - animatedSkullFrameSize.X || animatedSkullPosition.X < 0)
+            {
+                skullMoveSpeed.X *= -1;
+            }
+
+            //move the ring along the Y AXIS
+            animatedSkullPosition.Y += skullMoveSpeed.Y;
+            if (animatedSkullPosition.Y >= Window.ClientBounds.Height - animatedSkullFrameSize.Y || animatedSkullPosition.Y < 0)
+            {
+                skullMoveSpeed.Y *= -1;
             }
 
             base.Update(gameTime);
@@ -143,6 +191,10 @@ namespace AnimatedSprites
 
             spriteBatch.Draw(animatedRingTexture, animatedRingPosition, 
                 new Rectangle(currentRingFrame.X * animatedRingFrameSize.X, currentRingFrame.Y * animatedRingFrameSize.Y, animatedRingFrameSize.X, animatedRingFrameSize.Y), 
+                Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+
+            spriteBatch.Draw(animatedSkullTexture, animatedSkullPosition,
+                new Rectangle(currentSkullFrame.X * animatedSkullFrameSize.X, currentSkullFrame.Y * animatedSkullFrameSize.Y, animatedSkullFrameSize.X, animatedSkullFrameSize.Y),
                 Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
 
             spriteBatch.End();
