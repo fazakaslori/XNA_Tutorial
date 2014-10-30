@@ -19,6 +19,9 @@ namespace AnimatedSprites
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        //mouse helpers
+        MouseState prevMouseState;
+
         //Texxture variables
         Texture2D animatedRingTexture;
         Texture2D animatedSkullTexture;
@@ -115,6 +118,8 @@ namespace AnimatedSprites
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            var keyboardState = Keyboard.GetState();
+
             //animate the ring image - a.k.a increse the index of the image in the image matrix
             ringAnimation.TimeSinceLastUpdate += gameTime.ElapsedGameTime.Milliseconds;
             if (ringAnimation.TimeSinceLastUpdate > 1000 / ringAnimation.FramesPerSecond)
@@ -147,33 +152,64 @@ namespace AnimatedSprites
                 }
             }
 
-            //move the ring along the X AXIS
-            animatedRingPosition.X += ringMoveSpeed.X;
-            if (animatedRingPosition.X > Window.ClientBounds.Width - animatedRingFrameSize.X || animatedRingPosition.X < 0)
+            if (keyboardState.IsKeyDown(Keys.Right))
             {
-                ringMoveSpeed.X *= -1;
+                animatedRingPosition.X += ringMoveSpeed.X;
+            }
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                animatedRingPosition.X -= ringMoveSpeed.X;
+            }
+            if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                animatedRingPosition.Y -= ringMoveSpeed.Y;
+            }
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                animatedRingPosition.Y += ringMoveSpeed.Y;
+            }
+
+            //move the ring along the X AXIS
+            //animatedRingPosition.X += ringMoveSpeed.X;
+            if (animatedRingPosition.X >= Window.ClientBounds.Width - animatedRingFrameSize.X)
+            {
+                animatedRingPosition.X = Window.ClientBounds.Width - animatedRingFrameSize.X;
+            }
+            if (animatedRingPosition.X <= 0)
+            {
+                animatedRingPosition.X = 0;
             }
 
             //move the ring along the Y AXIS
-            animatedRingPosition.Y += ringMoveSpeed.Y;
-            if (animatedRingPosition.Y >= Window.ClientBounds.Height - animatedRingFrameSize.Y || animatedRingPosition.Y < 0)
+            //animatedRingPosition.Y += ringMoveSpeed.Y;
+            if (animatedRingPosition.Y >= Window.ClientBounds.Height - animatedRingFrameSize.Y)
             {
-                ringMoveSpeed.Y *= -1;
+                animatedRingPosition.Y = Window.ClientBounds.Height - animatedRingFrameSize.Y;
+            }
+            if (animatedRingPosition.Y <= 0)
+            {
+                animatedRingPosition.Y = 0;
             }
 
-            //move the ring along the X AXIS
+            //move the skull along the X AXIS
             animatedSkullPosition.X += skullMoveSpeed.X;
-            if (animatedSkullPosition.X > Window.ClientBounds.Width - animatedSkullFrameSize.X || animatedSkullPosition.X < 0)
+            if (animatedSkullPosition.X > Window.ClientBounds.Width - animatedSkullFrameSize.X || animatedSkullPosition.X <= 0)
             {
                 skullMoveSpeed.X *= -1;
             }
 
-            //move the ring along the Y AXIS
+            //move the skull along the Y AXIS
             animatedSkullPosition.Y += skullMoveSpeed.Y;
-            if (animatedSkullPosition.Y >= Window.ClientBounds.Height - animatedSkullFrameSize.Y || animatedSkullPosition.Y < 0)
+            if (animatedSkullPosition.Y >= Window.ClientBounds.Height - animatedSkullFrameSize.Y || animatedSkullPosition.Y <= 0)
             {
                 skullMoveSpeed.Y *= -1;
             }
+
+            MouseState mouseState = Mouse.GetState();
+            if (mouseState.X != prevMouseState.X ||
+            mouseState.Y != prevMouseState.Y)
+                animatedRingPosition = new Vector2(mouseState.X, mouseState.Y);
+            prevMouseState = mouseState;
 
             base.Update(gameTime);
         }
