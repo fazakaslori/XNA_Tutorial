@@ -23,26 +23,39 @@ namespace AnimatedSprites
         MouseState prevMouseState;
 
         //Texxture variables
-        Texture2D animatedRingTexture;
-        Texture2D animatedSkullTexture;
+        Texture2D ringTexture;
+        Texture2D skullTexture;
+        Texture2D plusTexture;
 
         //animation variables
-        Point animatedRingFrameSize = new Point(75, 75);
+        Point ringFrameSize = new Point(75, 75);
         Point currentRingFrame = new Point(0, 0);
-        Point animatedRingSpriteSheetSize = new Point(6, 8);
+        Point ringSpriteSheetSize = new Point(6, 8);
         SpriteAinationTime ringAnimation;
 
-        Point animatedSkullFrameSize = new Point(75, 75);
+        Point skullFrameSize = new Point(75, 75);
         Point currentSkullFrame = new Point(0, 0);
-        Point animatedSkullSpriteSheetSize = new Point(6, 8);
+        Point skullSpriteSheetSize = new Point(6, 8);
         SpriteAinationTime skullAnimation;
+
+        Point plusFrameSize = new Point(75, 75);
+        Point currentPlusFrame = new Point(0, 0);
+        Point plusSpriteSheetSize = new Point(6, 4);
+        SpriteAinationTime plusAnimation;
 
         //variables for movespeeds and positioning
         Vector2 ringMoveSpeed;
-        Vector2 animatedRingPosition;
+        Vector2 ringPosition;
 
         Vector2 skullMoveSpeed;
-        Vector2 animatedSkullPosition;
+        Vector2 skullPosition;
+
+        Vector2 plusMoveSpeed;
+        Vector2 plusPosition;
+
+        int ringCollisionRectOffset = 10;
+        int skullCollisionRectOffset = 10;
+        int plusCollisionRectOffset = 10;
 
         struct SpriteAinationTime
         {
@@ -54,6 +67,8 @@ namespace AnimatedSprites
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            IsMouseVisible = true;
 
             //chaging the frame rate!
             //TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 50); //20fps
@@ -67,19 +82,29 @@ namespace AnimatedSprites
         /// </summary>
         protected override void Initialize()
         {
+            //initializing the rings object
             ringAnimation = new SpriteAinationTime();
             ringAnimation.FramesPerSecond = 60;
             ringAnimation.TimeSinceLastUpdate = 0;
 
-            animatedRingPosition = Vector2.Zero;
+            ringPosition = Vector2.Zero;
             ringMoveSpeed = new Vector2(5, 3);
 
+            //initializing the skull object
             skullAnimation = new SpriteAinationTime();
             skullAnimation.FramesPerSecond = 60;
             skullAnimation.TimeSinceLastUpdate = 0;
 
-            animatedSkullPosition = Vector2.Zero;
+            skullPosition = Vector2.Zero;
             skullMoveSpeed = new Vector2(2, 2);
+
+            //initializing the plus object
+            plusAnimation = new SpriteAinationTime();
+            plusAnimation.FramesPerSecond = 60;
+            plusAnimation.TimeSinceLastUpdate = 0;
+
+            plusPosition = Vector2.Zero;
+            plusMoveSpeed = new Vector2(4, 6);
 
             base.Initialize();
         }
@@ -94,8 +119,9 @@ namespace AnimatedSprites
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //loading sprites
-            animatedRingTexture = Content.Load<Texture2D>(@"images\threerings");
-            animatedSkullTexture = Content.Load<Texture2D>(@"images\skullball");
+            ringTexture = Content.Load<Texture2D>(@"images\threerings");
+            skullTexture = Content.Load<Texture2D>(@"images\skullball");
+            plusTexture = Content.Load<Texture2D>(@"images\plus");
         }
 
         /// <summary>
@@ -127,11 +153,11 @@ namespace AnimatedSprites
                 ringAnimation.TimeSinceLastUpdate -= 1000 / ringAnimation.FramesPerSecond;
 
                 ++currentRingFrame.X;
-                if (currentRingFrame.X >= animatedRingSpriteSheetSize.X)
+                if (currentRingFrame.X >= ringSpriteSheetSize.X)
                 {
                     currentRingFrame.X = 0;
                     ++currentRingFrame.Y;
-                    if (currentRingFrame.Y >= animatedRingSpriteSheetSize.Y)
+                    if (currentRingFrame.Y >= ringSpriteSheetSize.Y)
                         currentRingFrame.Y = 0;
                 }
             }
@@ -143,73 +169,109 @@ namespace AnimatedSprites
                 skullAnimation.TimeSinceLastUpdate -= 1000 / skullAnimation.FramesPerSecond;
 
                 ++currentSkullFrame.X;
-                if (currentSkullFrame.X >= animatedSkullSpriteSheetSize.X)
+                if (currentSkullFrame.X >= skullSpriteSheetSize.X)
                 {
                     currentSkullFrame.X = 0;
                     ++currentSkullFrame.Y;
-                    if (currentSkullFrame.Y >= animatedSkullSpriteSheetSize.Y)
+                    if (currentSkullFrame.Y >= skullSpriteSheetSize.Y)
                         currentSkullFrame.Y = 0;
+                }
+            }
+
+            //animate the plus image - a.k.a increse the index of the image in the image matrix
+            plusAnimation.TimeSinceLastUpdate += gameTime.ElapsedGameTime.Milliseconds;
+            if (plusAnimation.TimeSinceLastUpdate > 1000 / plusAnimation.FramesPerSecond)
+            {
+                plusAnimation.TimeSinceLastUpdate -= 1000 / plusAnimation.FramesPerSecond;
+
+                ++currentPlusFrame.X;
+                if (currentPlusFrame.X >= plusSpriteSheetSize.X)
+                {
+                    currentPlusFrame.X = 0;
+                    ++currentPlusFrame.Y;
+                    if (currentPlusFrame.Y >= plusSpriteSheetSize.Y)
+                        currentPlusFrame.Y = 0;
                 }
             }
 
             if (keyboardState.IsKeyDown(Keys.Right))
             {
-                animatedRingPosition.X += ringMoveSpeed.X;
+                ringPosition.X += ringMoveSpeed.X;
             }
             if (keyboardState.IsKeyDown(Keys.Left))
             {
-                animatedRingPosition.X -= ringMoveSpeed.X;
+                ringPosition.X -= ringMoveSpeed.X;
             }
             if (keyboardState.IsKeyDown(Keys.Up))
             {
-                animatedRingPosition.Y -= ringMoveSpeed.Y;
+                ringPosition.Y -= ringMoveSpeed.Y;
             }
             if (keyboardState.IsKeyDown(Keys.Down))
             {
-                animatedRingPosition.Y += ringMoveSpeed.Y;
+                ringPosition.Y += ringMoveSpeed.Y;
             }
 
             //move the ring along the X AXIS
             //animatedRingPosition.X += ringMoveSpeed.X;
-            if (animatedRingPosition.X >= Window.ClientBounds.Width - animatedRingFrameSize.X)
+            if (ringPosition.X >= Window.ClientBounds.Width - ringFrameSize.X)
             {
-                animatedRingPosition.X = Window.ClientBounds.Width - animatedRingFrameSize.X;
+                ringPosition.X = Window.ClientBounds.Width - ringFrameSize.X;
             }
-            if (animatedRingPosition.X <= 0)
+            if (ringPosition.X <= 0)
             {
-                animatedRingPosition.X = 0;
+                ringPosition.X = 0;
             }
 
             //move the ring along the Y AXIS
             //animatedRingPosition.Y += ringMoveSpeed.Y;
-            if (animatedRingPosition.Y >= Window.ClientBounds.Height - animatedRingFrameSize.Y)
+            if (ringPosition.Y >= Window.ClientBounds.Height - ringFrameSize.Y)
             {
-                animatedRingPosition.Y = Window.ClientBounds.Height - animatedRingFrameSize.Y;
+                ringPosition.Y = Window.ClientBounds.Height - ringFrameSize.Y;
             }
-            if (animatedRingPosition.Y <= 0)
+            if (ringPosition.Y <= 0)
             {
-                animatedRingPosition.Y = 0;
+                ringPosition.Y = 0;
             }
 
             //move the skull along the X AXIS
-            animatedSkullPosition.X += skullMoveSpeed.X;
-            if (animatedSkullPosition.X > Window.ClientBounds.Width - animatedSkullFrameSize.X || animatedSkullPosition.X <= 0)
+            skullPosition.X += skullMoveSpeed.X;
+            if (skullPosition.X > Window.ClientBounds.Width - skullFrameSize.X || skullPosition.X <= 0)
             {
                 skullMoveSpeed.X *= -1;
             }
 
             //move the skull along the Y AXIS
-            animatedSkullPosition.Y += skullMoveSpeed.Y;
-            if (animatedSkullPosition.Y >= Window.ClientBounds.Height - animatedSkullFrameSize.Y || animatedSkullPosition.Y <= 0)
+            skullPosition.Y += skullMoveSpeed.Y;
+            if (skullPosition.Y >= Window.ClientBounds.Height - skullFrameSize.Y || skullPosition.Y <= 0)
             {
                 skullMoveSpeed.Y *= -1;
             }
 
+            //move the plus along the X AXIS
+            plusPosition.X += plusMoveSpeed.X;
+            if (plusPosition.X > Window.ClientBounds.Width - plusFrameSize.X || plusPosition.X <= 0)
+            {
+                plusMoveSpeed.X *= -1;
+            }
+
+            //move the plus along the Y AXIS
+            plusPosition.Y += plusMoveSpeed.Y;
+            if (plusPosition.Y >= Window.ClientBounds.Height - plusFrameSize.Y || plusPosition.Y <= 0)
+            {
+                plusMoveSpeed.Y *= -1;
+            }
+
             MouseState mouseState = Mouse.GetState();
-            if (mouseState.X != prevMouseState.X ||
-            mouseState.Y != prevMouseState.Y)
-                animatedRingPosition = new Vector2(mouseState.X, mouseState.Y);
+            if (mouseState.X != prevMouseState.X || mouseState.Y != prevMouseState.Y)
+            {
+                ringPosition = new Vector2(mouseState.X, mouseState.Y);
+            }
             prevMouseState = mouseState;
+
+            if (Collide())
+            {
+                Exit();
+            }
 
             base.Update(gameTime);
         }
@@ -225,17 +287,33 @@ namespace AnimatedSprites
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
 
-            spriteBatch.Draw(animatedRingTexture, animatedRingPosition, 
-                new Rectangle(currentRingFrame.X * animatedRingFrameSize.X, currentRingFrame.Y * animatedRingFrameSize.Y, animatedRingFrameSize.X, animatedRingFrameSize.Y), 
+            spriteBatch.Draw(ringTexture, ringPosition, 
+                new Rectangle(currentRingFrame.X * ringFrameSize.X, currentRingFrame.Y * ringFrameSize.Y, ringFrameSize.X, ringFrameSize.Y), 
                 Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
 
-            spriteBatch.Draw(animatedSkullTexture, animatedSkullPosition,
-                new Rectangle(currentSkullFrame.X * animatedSkullFrameSize.X, currentSkullFrame.Y * animatedSkullFrameSize.Y, animatedSkullFrameSize.X, animatedSkullFrameSize.Y),
+            spriteBatch.Draw(skullTexture, skullPosition,
+                new Rectangle(currentSkullFrame.X * skullFrameSize.X, currentSkullFrame.Y * skullFrameSize.Y, skullFrameSize.X, skullFrameSize.Y),
+                Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+
+            spriteBatch.Draw(plusTexture, plusPosition,
+                new Rectangle(currentPlusFrame.X * plusFrameSize.X, currentPlusFrame.Y * plusFrameSize.Y, plusFrameSize.X, plusFrameSize.Y),
                 Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
 
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected bool Collide()
+        {
+            Rectangle ringsRect = new Rectangle((int)ringPosition.X + ringCollisionRectOffset, (int)ringPosition.Y + ringCollisionRectOffset,
+                ringFrameSize.X - (ringCollisionRectOffset * 2), ringFrameSize.Y - (ringCollisionRectOffset * 2));
+            Rectangle skullRect = new Rectangle((int)skullPosition.X + skullCollisionRectOffset, (int)skullPosition.Y + skullCollisionRectOffset,
+                skullFrameSize.X - (skullCollisionRectOffset * 2), skullFrameSize.Y - (skullCollisionRectOffset * 2));
+            Rectangle plusRect = new Rectangle((int)plusPosition.X + plusCollisionRectOffset, (int)plusPosition.Y + plusCollisionRectOffset,
+                plusFrameSize.X - (plusCollisionRectOffset * 2), plusFrameSize.Y - (plusCollisionRectOffset * 2));
+
+            return ringsRect.Intersects(skullRect) || ringsRect.Intersects(plusRect);
         }
     }
 }
