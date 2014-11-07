@@ -10,8 +10,8 @@ namespace Escape_The_Objects.Sprites
     public class StaticSprite : SpriteBase
     {
         public StaticSprite(Texture2D texture, Point sheetSize, Point frameSize, int framesPerSec,
-            Point startFrame, Vector2 position)
-            : base(texture, sheetSize, frameSize, framesPerSec, startFrame, position, new Rectangle(0, 0, (int)position.X, (int)position.Y), Vector2.Zero)
+            Point startFrame, Vector2 position, Point collisionRectangle)
+            : base(texture, sheetSize, frameSize, framesPerSec, startFrame, position, collisionRectangle)
         {
         }
     }

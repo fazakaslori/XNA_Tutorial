@@ -9,30 +9,35 @@ namespace Escape_The_Objects.Sprites
 {
     public abstract class SpriteBase
     {
-        Texture2D texture;
-        Point currentFrame;
-        int framesPerSecond;
-        Point sheetSize;
-        Point frameSize;
-        int timeSinceLastFrame;
+        protected Texture2D texture;
+        protected Point currentFrame;
+        protected int framesPerSecond;
+        protected Point sheetSize;
+        protected Point frameSize;
+        protected int timeSinceLastFrame;
 
-        Vector2 currentPosition;
-        protected Vector2 speed;
+        protected Vector2 currentPosition;
 
-        Rectangle bounds;
+        public Point collisionOffset;
+        public Rectangle CollisionRectangle
+        {
+            get
+            {
+                return new Rectangle((int)currentPosition.X + collisionOffset.X, (int)currentPosition.Y + collisionOffset.Y,
+                frameSize.X - 2 * collisionOffset.X, frameSize.Y - 2 * collisionOffset.Y);
+            }
+        }
 
-        public SpriteBase(Texture2D texture, Point sheetSize, Point frameSize, int framesPerSec, 
-            Point startFrame, Vector2 position, Rectangle bounds, Vector2 moveSpeed)
+        public SpriteBase(Texture2D texture, Point sheetSize, Point frameSize, int framesPerSec,
+            Point startFrame, Vector2 position, Point collisionOffset)
         {
             this.texture = texture;
-            this.sheetSize.X = sheetSize.X; this.sheetSize.Y = sheetSize.Y;
-            this.frameSize.X = frameSize.X; this.frameSize.Y = frameSize.X;
+            this.sheetSize = sheetSize;
+            this.frameSize = frameSize;
             this.framesPerSecond = framesPerSec;
-            this.currentFrame.X = startFrame.X; this.currentFrame.Y = startFrame.Y;
-
-            this.currentPosition.X = position.X; this.currentPosition.Y = position.Y;
-            this.speed.X = moveSpeed.X; speed.Y = moveSpeed.Y;
-            this.bounds = bounds;
+            this.currentFrame = startFrame;
+            this.currentPosition = position;
+            this.collisionOffset = collisionOffset;
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -45,7 +50,6 @@ namespace Escape_The_Objects.Sprites
         public virtual void Update(GameTime gameTime)
         {
             SetNextFrame(gameTime);
-            CalculatePosition();
         }
 
         private void SetNextFrame(GameTime gameTime)
@@ -64,23 +68,6 @@ namespace Escape_The_Objects.Sprites
                     {
                         currentFrame.Y = 0;
                     }
-                }
-            }
-        }
-
-        public void CalculatePosition()
-        {
-            if (speed.X != 0 && speed.Y != 0)
-            {
-                currentPosition.X += speed.X;
-                if ((currentPosition.X + frameSize.X) >= bounds.Width || currentPosition.X <= 0)
-                {
-                    speed.X *= -1;
-                }
-                currentPosition.Y += speed.Y;
-                if ((currentPosition.Y + frameSize.Y) >= bounds.Height || currentPosition.Y <= 0)
-                {
-                    speed.Y *= -1;
                 }
             }
         }

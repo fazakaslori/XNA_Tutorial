@@ -10,29 +10,65 @@ namespace Escape_The_Objects.Sprites
 {
     public class UserControlledSprite : MovableSprite
     {
-        public UserControlledSprite(Texture2D texture, Point sheetSize, Point frameSize, int framesPerSec,
-            Point startFrame, Vector2 position, Rectangle bounds, Vector2 moveSpeed)
-            : base(texture, sheetSize, frameSize, framesPerSec, startFrame, position, bounds, moveSpeed)
+        private Vector2 Direction
         {
+            get
+            {
+                Vector2 input = Vector2.Zero;
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                {
+                    input.X += -1;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                {
+                    input.X += +1;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                {
+                    input.Y += -1;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                {
+                    input.Y += 1;
+                }
+
+                return input * speed;
+            }
         }
 
-        public override void Update(GameTime gameTime)
+        public UserControlledSprite(Texture2D texture, Point sheetSize, Point frameSize, int framesPerSec,
+            Point startFrame, Vector2 position, Rectangle bounds, Vector2 moveSpeed, Point collisionRectangle)
+            : base(texture, sheetSize, frameSize, framesPerSec, startFrame, position, bounds, moveSpeed, collisionRectangle)
         {
-            Vector2 inputPosition = Vector2.Zero;
+            speed.X = Math.Abs(moveSpeed.X);
+            speed.Y = Math.Abs(moveSpeed.Y);
+        }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                inputPosition.X -= 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                inputPosition.X += 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                inputPosition.Y -= 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                inputPosition.Y += 1;
+        public override void CalculatePosition()
+        {
+            if (speed.X != 0 && speed.Y != 0)
+            {
+                currentPosition.X += Direction.X;
+                if ((currentPosition.X + frameSize.X) >= bounds.Width)
+                {
+                    currentPosition.X = bounds.Width - frameSize.X;
+                }
+                if (currentPosition.X <= 0)
+                {
+                    currentPosition.X = 0;
+                }
 
-            speed.X = inputPosition.X * speed.X;
-            speed.Y = inputPosition.Y * speed.Y;
-
-            base.Update(gameTime);
+                currentPosition.Y += Direction.Y;
+                if ((currentPosition.Y + frameSize.Y) >= bounds.Height)
+                {
+                    currentPosition.Y = bounds.Height - frameSize.Y;
+                }
+                if (currentPosition.Y <= 0)
+                {
+                    currentPosition.Y = 0;
+                }
+            }
         }
     }
 }
