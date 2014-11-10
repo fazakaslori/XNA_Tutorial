@@ -31,17 +31,17 @@ namespace AnimatedSprites
         {
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
-            player = new UserControlledSprite(Game.Content.Load<Texture2D>(@"Images/threerings"), Vector2.Zero, new Point(75, 75), 10, new Point(0, 0),
+            player = new UserControlledSprite(Game.Content.Load<Texture2D>(@"Images/threerings"), Vector2.Zero, new Point(75, 75), 12, new Point(0, 0),
                 new Point(6, 8), new Vector2(6, 6));
 
-            automatedSprites.Add(new AutomatedSprite(Game.Content.Load<Texture2D>(@"Images/skullball"), new Vector2(150, 150), new Point(75, 75), 10, 
-                new Point(0, 0), new Point(6, 8), Vector2.Zero));
-            automatedSprites.Add(new BouncingSprite(Game.Content.Load<Texture2D>(@"Images/skullball"), new Vector2(300, 150), new Point(75, 75), 10,
-                new Point(0, 0), new Point(6, 8), new Vector2(1, 2)));
-            automatedSprites.Add(new BouncingSprite(Game.Content.Load<Texture2D>(@"Images/plus"), new Vector2(150, 300), new Point(75, 75), 10,
-                new Point(0, 0), new Point(6, 4), new Vector2(1, 1)));
-            automatedSprites.Add(new BouncingSprite(Game.Content.Load<Texture2D>(@"Images/plus"), new Vector2(600, 400), new Point(75, 75), 10,
-                new Point(0, 0), new Point(6, 4), new Vector2(2, 2)));
+            automatedSprites.Add(new AutomatedSprite(Game.Content.Load<Texture2D>(@"Images/skullball"), new Vector2(150, 150), new Point(75, 75), 12,
+                new Point(0, 0), new Point(6, 8), Vector2.Zero, "skullcollision"));
+            automatedSprites.Add(new BouncingSprite(Game.Content.Load<Texture2D>(@"Images/skullball"), new Vector2(300, 150), new Point(75, 75), 12,
+                new Point(0, 0), new Point(6, 8), new Vector2(1, 2), "skullcollision"));
+            automatedSprites.Add(new BouncingSprite(Game.Content.Load<Texture2D>(@"Images/plus"), new Vector2(150, 300), new Point(75, 75), 12,
+                new Point(0, 0), new Point(6, 4), new Vector2(1, 1), "skullcollision"));
+            automatedSprites.Add(new BouncingSprite(Game.Content.Load<Texture2D>(@"Images/plus"), new Vector2(600, 400), new Point(75, 75), 12,
+                new Point(0, 0), new Point(6, 4), new Vector2(2, 2), "skullcollision"));
 
  	        base.LoadContent();
         }
@@ -67,14 +67,21 @@ namespace AnimatedSprites
             player.Update(gameTime, Game.Window.ClientBounds);
 
             //update Sprites
-            foreach (Sprite sprite in automatedSprites)
+            for (int i = 0; i < automatedSprites.Count; ++i)
             {
-                sprite.Update(gameTime, Game.Window.ClientBounds);
+                automatedSprites[i].Update(gameTime, Game.Window.ClientBounds);
 
                 //check for collision detection
-                if (sprite.collisionRect.Intersects(player.collisionRect))
+                if (automatedSprites[i].collisionRect.Intersects(player.collisionRect))
                 {
-                    Game.Exit();
+                    // Play collision sound
+                    if (automatedSprites[i].CollisionCueName != null)
+                    {
+                        ((Game)Game).PlayCue(automatedSprites[i].CollisionCueName);
+                    }
+                    // Remove the automated Sprite
+                    automatedSprites.RemoveAt(i);
+                    --i;
                 }
             }
 

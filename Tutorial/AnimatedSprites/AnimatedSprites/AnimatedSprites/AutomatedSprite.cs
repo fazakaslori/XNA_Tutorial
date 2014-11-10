@@ -9,16 +9,16 @@ namespace AnimatedSprites
 {
     class AutomatedSprite : Sprite
     {
-        public AutomatedSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, 
-            Point currentFrame, Point sheetSize, Vector2 speed)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed)
+        public AutomatedSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset,
+            Point currentFrame, Point sheetSize, Vector2 speed, string collisionCueName)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed, collisionCueName)
         { 
 
         }
 
-        public AutomatedSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, 
-            Point currentFrame, Point sheetSize, Vector2 speed, int millisecondsPerFrame)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed, millisecondsPerFrame)
+        public AutomatedSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset,
+            Point currentFrame, Point sheetSize, Vector2 speed, int millisecondsPerFrame, string collisionCueName)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed, millisecondsPerFrame, collisionCueName)
         { 
 
         }

@@ -9,34 +9,22 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace AnimatedSprites
+namespace SimpleSounds
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        //Audio Content
-        AudioEngine audioEngine;
-        WaveBank waveBank;
-        SoundBank soundBank;
-        Cue trackCue;
+        SoundEffect soundEffect;
 
-        //SpriteManager
-        SpriteManager spriteManager;
-
-        public Game()
+        public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            IsMouseVisible = true;
-
-            //chaging the frame rate!
-            //TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 50); //20fps
         }
 
         /// <summary>
@@ -47,8 +35,7 @@ namespace AnimatedSprites
         /// </summary>
         protected override void Initialize()
         {
-            spriteManager = new SpriteManager(this);
-            Components.Add(spriteManager);
+            // TODO: Add your initialization logic here
 
             base.Initialize();
         }
@@ -62,16 +49,10 @@ namespace AnimatedSprites
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //Audio stuff
-            audioEngine = new AudioEngine(@"Content\Audio\GameAudio.xgs");
-            waveBank = new WaveBank(audioEngine, @"Content\Audio\Wave Bank.xwb");
-            soundBank = new SoundBank(audioEngine, @"Content\Audio\Sound Bank.xsb");
-
-            // Start the soundtrack audio
-            trackCue = soundBank.GetCue("track");
-            trackCue.Play();
-            // Play the start sound
-            soundBank.PlayCue("start");
+            // TODO: use this.Content to load your game content here
+            soundEffect = Content.Load<SoundEffect>(@"Audio\start");
+            SoundEffectInstance soundEffectInstance = soundEffect.CreateInstance();
+            soundEffectInstance.Play();
         }
 
         /// <summary>
@@ -94,7 +75,7 @@ namespace AnimatedSprites
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            audioEngine.Update();
+            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
@@ -105,14 +86,11 @@ namespace AnimatedSprites
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-        }
-
-        public void PlayCue(string cueName)
-        {
-            soundBank.PlayCue(cueName);
         }
     }
 }

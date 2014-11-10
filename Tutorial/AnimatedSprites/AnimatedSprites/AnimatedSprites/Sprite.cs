@@ -35,6 +35,7 @@ namespace AnimatedSprites
         protected Vector2 position;
 
         int collisionRectOffset;
+        public string CollisionCueName { get; private set; }
 
         public abstract Vector2 Direction
         {
@@ -50,14 +51,14 @@ namespace AnimatedSprites
             }
         }
 
-        public Sprite(Texture2D texture, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 moveSpeed)
-            : this(texture, position, frameSize, collisionOffset, currentFrame, sheetSize, moveSpeed, framesPerSecond)
+        public Sprite(Texture2D texture, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 moveSpeed, string collisionCueName)
+            : this(texture, position, frameSize, collisionOffset, currentFrame, sheetSize, moveSpeed, framesPerSecond, collisionCueName)
         {
 
         }
 
         public Sprite(Texture2D texture, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize,
-            Vector2 moveSpeed, int framesPerSecond)
+            Vector2 moveSpeed, int framesPerSecond, string collisionCueName)
         {
             this.texture = texture;
             this.position = position;
@@ -67,6 +68,7 @@ namespace AnimatedSprites
             this.sheetSize = sheetSize;
             this.moveSpeed = moveSpeed;
             this.animation = new SpriteAinationTime(framesPerSecond);
+            CollisionCueName = collisionCueName;
         }
 
         public virtual void Update(GameTime gameTime, Rectangle clientBounds)
