@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimatedSprites", "AnimatedSprites\AnimatedSprites\AnimatedSprites.csproj", "{0A8E6849-73A7-4B2D-B4EA-62F0473658D2}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "AnimatedSpritesContent", "AnimatedSprites\AnimatedSpritesContent\AnimatedSpritesContent.contentproj", "{93B701A8-5CD8-482E-BC60-452143442035}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimatedSpritesContent", "AnimatedSprites\AnimatedSpritesContent\AnimatedSpritesContent.contentproj", "{93B701A8-5CD8-482E-BC60-452143442035}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,5 +22,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

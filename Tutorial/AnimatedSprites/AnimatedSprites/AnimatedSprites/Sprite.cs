@@ -94,5 +94,15 @@ namespace AnimatedSprites
             spriteBatch.Draw(texture, position, new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y),
                 Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
+
+        public bool IsOutOfBounds(Rectangle rectangle)
+        {
+            if (position.X < -frameSize.X || position.X > rectangle.Width || position.Y < -frameSize.Y || position.Y > rectangle.Height)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

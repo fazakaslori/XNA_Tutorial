@@ -14,7 +14,7 @@ namespace AnimatedSprites
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -28,7 +28,9 @@ namespace AnimatedSprites
         //SpriteManager
         SpriteManager spriteManager;
 
-        public Game()
+        public Random Randomizer { get; private set; }
+
+        public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -37,6 +39,11 @@ namespace AnimatedSprites
 
             //chaging the frame rate!
             //TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 50); //20fps
+
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 768;
+
+            Randomizer = new Random();
         }
 
         /// <summary>
